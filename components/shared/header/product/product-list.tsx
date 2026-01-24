@@ -1,11 +1,11 @@
 import React from "react";
-import {Product} from "@/types/Product";
+import {Product2} from "@/types/Product";
 import ProductCard from "./product-card"
 
 export default function ProductList({
     data,title,limit
 }:{
-    data: Product[];
+    data: Product2[];
     title?: string;
     limit?: number;
 }){
@@ -13,8 +13,7 @@ export default function ProductList({
     return(
         <div>
             <h2 className="h2-bold mb-4">{title?(title):'Lista Productos'}</h2>
-            {
-                limitedData.length>0 ? 
+            {limitedData.length>0 ? 
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">{
                     limitedData.map((p) => <ProductCard product={p} key={p.slug} />)
                 }</div>

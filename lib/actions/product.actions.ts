@@ -12,7 +12,8 @@ export async function getLatestProducts(){
 
 export async function getProductBySlug(slug: string){
     const data = await prisma.product.findFirst({
-        where: {slug},
+        where: { slug },
     });
-    return data;
+    // Ensure plain object for Client Components (no Decimal/Date proxies or symbol properties)
+    return data ? convertToPlainObject(data) : null;
 }

@@ -1,11 +1,11 @@
 import React from "react"
-import {Product} from "@/types/Product"
+import {Product2} from "@/types/Product"
 import Link from "next/link"
 import Image from "next/image"
 import {Card, CardContent, CardHeader} from "@/components/ui/card"
 import ProductPrice from "./product-price"
 
-export default function PorductCard({product}:{product:Product}){
+export default function ProductCard({product}:{product:Product2}){
     console.log(product.price);
     return(
         <Card className="w-full max-w-sm">

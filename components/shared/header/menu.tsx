@@ -15,7 +15,7 @@ export default function MenuHeader(){
                 <Link href="/cart"><ShoppingCart />Cart</Link>
             </Button>
             <Button asChild variant={"ghost"}>
-                <Link href="/cart"><UserIcon />Sign-In</Link>
+                <Link href="/sign-in"><UserIcon />Sign-In</Link>
             </Button>
             </nav>
             <nav className="md:hidden">
@@ -30,7 +30,7 @@ export default function MenuHeader(){
                             <Link href="/cart"><ShoppingCart />Cart</Link>
                         </Button>
                         <Button asChild variant={"ghost"}>
-                            <Link href="/cart"><UserIcon />Sign-In</Link>
+                            <Link href="/sign-in"><UserIcon />Sign-In</Link>
                         </Button>
                         <SheetDescription />
                     </SheetContent>
