@@ -2,6 +2,7 @@ import "./globals.css";
 import {Inter} from "next/font/google";
 import { APP_DESCRIPTION, APP_NAME, SERVER_URL} from "@/lib/constants";
 import {ThemeProvider} from "next-themes";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({
   variable: "--font-inter-sans",
@@ -31,6 +32,7 @@ export default function MainLayout({
         disableTransitionOnChange
         >
           {children}
+          <Toaster richColors expand closeButton position="top-center"/>
         </ThemeProvider>
       </body>
     </html>

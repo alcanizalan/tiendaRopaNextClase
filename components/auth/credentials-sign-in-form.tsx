@@ -5,33 +5,25 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { signUpDefaultValues } from "@/lib/constants";
 import { authClient } from "@/lib/auth-client";
-import {toast} from "sonner"
 
-export default function CredentialsSignUpForm(){
+export default function CredentialsSignInForm(){
     async function handleSubmit(evt: React.FormEvent<HTMLFormElement>){
         evt.preventDefault();
         const formData = new FormData(evt.currentTarget);
-        const name = String(formData.get("name"));
         const email = String(formData.get("email"));
         const password = String(formData.get("password"));
-        const phone = String(formData.get("phone"));
-        if(!name || !password || !email) return;
-        await authClient.signUp.email(
+        if(!password || !email) return;
+        await authClient.signIn.email(
             {
-                name,
                 email,
                 password,
-                phone,
+                callbackURL: '/profile',
             },
             {
                 onRequest: () => {},
                 onResponse: () => {},
-                onError: (ctx) => { 
-                    toast.error(ctx.error.message);
-                    console.log(ctx.error.message) },
-                onSuccess: () => { 
-                    toast.success("Registro Correcto")
-                    console.log("Registro Correcto"); },
+                onError: (ctx) => { console.log(ctx.error.message) },
+                onSuccess: () => { console.log("Login Correcto") },
             }
         );
     }
@@ -39,22 +31,10 @@ export default function CredentialsSignUpForm(){
         <form onSubmit={handleSubmit}>
             <div className="space-y-6">
                 <div>
-                    <Label htmlFor="name">
-                        Name
-                    </Label>
-                    <Input id="name" name="name" type="text" defaultValue={signUpDefaultValues.name} required/>
-                </div>
-                <div>
                     <Label htmlFor="email">
                         Email
                     </Label>
                     <Input id="email" name="email" type="email" defaultValue={signUpDefaultValues.email} required/>
-                </div>
-                <div>
-                    <Label htmlFor="phone">
-                        Phone <span className="text-muted-foreground">(Optional)</span>
-                    </Label>
-                    <Input id="phone" name="phone" type="tel" defaultValue={signUpDefaultValues.phone}/>
                 </div>
                 <div>
                     <Label htmlFor="password">
@@ -64,7 +44,7 @@ export default function CredentialsSignUpForm(){
                 </div>
                 <div>
                     <Button className="w-full" type="submit">
-                        Sign up
+                        Sign In
                     </Button>
                 </div>
             </div>
