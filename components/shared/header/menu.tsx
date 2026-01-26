@@ -4,6 +4,7 @@ import Link from "next/link";
 import {Button} from "@/components/ui/button";
 import ModeToggle from "./mode-toggle";
 import {Sheet, SheetTrigger, SheetContent, SheetDescription, SheetTitle} from "@/components/ui/sheet";
+import ToggleSignInSignOut from "@/components/auth/toogle-signin-signout";
 
 
 export default function MenuHeader(){
@@ -14,9 +15,7 @@ export default function MenuHeader(){
             <Button asChild variant={"ghost"}>
                 <Link href="/cart"><ShoppingCart />Cart</Link>
             </Button>
-            <Button asChild variant={"ghost"}>
-                <Link href="/sign-in"><UserIcon />Sign-In</Link>
-            </Button>
+            <ToggleSignInSignOut />
             </nav>
             <nav className="md:hidden">
                 <Sheet>
@@ -29,9 +28,7 @@ export default function MenuHeader(){
                         <Button asChild variant={"ghost"}>
                             <Link href="/cart"><ShoppingCart />Cart</Link>
                         </Button>
-                        <Button asChild variant={"ghost"}>
-                            <Link href="/sign-in"><UserIcon />Sign-In</Link>
-                        </Button>
+                        <ToggleSignInSignOut />
                         <SheetDescription />
                     </SheetContent>
 

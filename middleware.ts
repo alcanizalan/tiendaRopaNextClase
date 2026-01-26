@@ -1,0 +1,31 @@
+import { betterFetch } from "@better-fetch/fetch";
+import type { auth } from "@/lib/auth";
+import { NextRequest, NextResponse } from "next/server";
+
+type Session = typeof auth.$Infer.Session;
+
+export async function middleware(request: NextRequest) {
+	const { data: session } = await betterFetch<Session>(
+        "/api/auth/get-session", 
+        {
+		baseURL: request.nextUrl.origin,
+		headers: {
+			cookie: request.headers.get("cookie") || "", 
+		},
+	});
+
+	if (!session) {
+		const signUrl = new URL("/sign-in", request.url)
+        signUrl.searchParams.set(
+            "callbackUrl",
+            request.nextUrl.pathname + request.nextUrl.search,
+        );
+        return NextResponse.redirect(signUrl)
+	}
+
+	return NextResponse.next();
+}
+
+export const config = {
+	matcher: ["/admin", "/user"], 
+};
