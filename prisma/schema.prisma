@@ -38,6 +38,7 @@ model User {
   image         String?
   phone         String?
   role          String?   @default("user")
+  comms         String
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   sessions      Session[]
