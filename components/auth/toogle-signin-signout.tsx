@@ -3,7 +3,8 @@ import React from "react";
 import {authClient} from "@/lib/auth-client"
 import {Button} from "../ui/button"
 import {useRouter} from "next/navigation"
-import { Link, UserIcon } from "lucide-react";
+import Link from "next/link"
+import { UserIcon } from "lucide-react";
 
 export default function ToggleSignInSignOut(){
     const router = useRouter();
