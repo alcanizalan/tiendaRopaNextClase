@@ -15,7 +15,7 @@ export default function ProductTablePagination({
                 <PaginationPrevious 
                     className={cn(currentPage == 1 ? "hidden" : "")}
                     href={
-                        currentPage > 1 ? `/admin/user-table?page=${currentPage - 1}` : "#"
+                        currentPage > 1 ? `/admin/users?page=${currentPage - 1}` : "#"
                     }
                 />
             </PaginationContent>
@@ -24,7 +24,7 @@ export default function ProductTablePagination({
                 <PaginationNext
                     className={cn(currentPage == totalPages ? "hidden" : "")}
                     href={
-                        currentPage < totalPages ? `/admin/user-table?page=${currentPage + 1}` : "#"
+                        currentPage < totalPages ? `/admin/users?page=${currentPage + 1}` : "#"
                     }
                 />
             </PaginationContent>

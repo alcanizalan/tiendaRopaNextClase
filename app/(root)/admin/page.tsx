@@ -28,7 +28,7 @@ export default async function AdminPage({searchParams}:{searchParams: Promise<{[
                 totalPages={pageInfo.totalPages}
             />
             <SignOutButton />
-            <Button className="mx-2"><Link href="/admin/user-table">User Table</Link></Button>
+            <Button className="mx-2"><Link href="/admin/users">User Table</Link></Button>
         </div>
     )
 }
