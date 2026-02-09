@@ -1,3 +1,4 @@
+
 import React from "react";
 import {auth} from "@/lib/auth";
 import {headers} from "next/headers"
@@ -20,15 +21,23 @@ export default async function AdminPage({searchParams}:{searchParams: Promise<{[
         pageSize: Number(pageSize) 
     });
     return (
-        <div>
-            Admin Page
-            <ProductTable 
-                products={data}
-                currentPage={pageInfo.currentPage}
-                totalPages={pageInfo.totalPages}
-            />
-            <SignOutButton />
-            <Button className="mx-2"><Link href="/admin/users">User Table</Link></Button>
-        </div>
+        <section id="admin" className="container mx-auto">
+            <div className="px-8 py-16 container mx-auto max-w-screen space-y-8">
+                <div className="flex justify-between">
+                    <h1 className="text-2xl font-bold">Admin Page</h1>
+                    <Button  asChild>
+                        <Link href="/admin/create-product">+ Create Product</Link>
+                    </Button>
+                </div>
+
+                <ProductTable 
+                    products={data}
+                    currentPage={pageInfo.currentPage}
+                    totalPages={pageInfo.totalPages}
+                />
+                <SignOutButton />
+                <Button className="mx-2"><Link href="/admin/users">User Table</Link></Button>
+            </div>
+        </section>
     )
 }

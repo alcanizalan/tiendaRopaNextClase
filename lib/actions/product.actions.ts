@@ -2,6 +2,7 @@
 import { prisma } from "@/db/prisma";
 import { convertToPlainObject } from "../utils";
 import {Product2} from "@/types/Product"
+import { Product } from "../generated/prisma/client";
 
 export async function getLatestProducts(){
     const { prisma } = await import("@/db/prisma");
@@ -43,3 +44,57 @@ export async function getProductBySlug(slug: string){
 
     return data ? convertToPlainObject(data) : null;
 }
+
+export async function actionPrueba(formData:FormData){
+    const rawFormData = {
+        name: formData.get("name"),
+        slug: formData.get("slug"),
+    }
+    console.log(rawFormData)
+}
+
+/*
+export type ProductFormState = {
+    success: boolean;
+    error: {
+        name?: string[];
+        slug?: string[];
+        price?: string[];
+        category?: string[];
+        brand?: string[];
+        description?: string[];
+        stock?: string[];
+        images?: string[];
+        numReviews?: string[];
+        isFeatored?: string[];
+        banner?: string[];
+        additional?: string[];
+    };
+    message: string[];
+    data?: Partial<Product>;
+};
+*/
+
+export type ProductFormState = {
+    success: boolean,
+    errors?: {[K in keyof Product]?:string[]} & {additional?: string[]},
+    message: string[],
+    data?: Partial<Product>,
+}
+
+export async function createActionProduct(
+    prevState: ProductFormState,
+    formData: FormData,
+
+){
+    const rawData = Object.fromEntries(formData.entries())
+    const submittedData = {
+        ...rawData,
+        isFeatured: rawData.isfeatured === "on",
+        sotck: Number(rawData.sotck),
+        numReviews: Number(rawData.numReviews),
+        price: rawData.price?.toString() || "0",
+        images: ["/images/imagen.jpg"]
+    };
+}
+
