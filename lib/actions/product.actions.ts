@@ -3,6 +3,7 @@ import { prisma } from "@/db/prisma";
 import { convertToPlainObject } from "../utils";
 import {Product2} from "@/types/Product"
 import { Product } from "../generated/prisma/client";
+import { insertProductSchema } from "../validators";
 
 export async function getLatestProducts(){
     const { prisma } = await import("@/db/prisma");
@@ -79,22 +80,60 @@ export type ProductFormState = {
     success: boolean,
     errors?: {[K in keyof Product]?:string[]} & {additional?: string[]},
     message: string[],
-    data?: Partial<Product>,
+    data?: Partial<Product> | unknown,
 }
 
 export async function createActionProduct(
     prevState: ProductFormState,
     formData: FormData,
-
-){
+): Promise<ProductFormState>{
     const rawData = Object.fromEntries(formData.entries())
     const submittedData = {
         ...rawData,
         isFeatured: rawData.isfeatured === "on",
-        sotck: Number(rawData.sotck),
+        stock: Number(rawData.stock),
         numReviews: Number(rawData.numReviews),
-        price: rawData.price?.toString() || "0",
+        //price: rawData.price?.toString() || "0",
+        price: "22.03",
         images: ["/images/imagen.jpg"]
     };
+    const validatedData = insertProductSchema.safeParse(submittedData);
+    if(!validatedData.success){
+        const flatened = validatedData.error.flatten((issue)=> issue.message);
+        return {
+            success: false,
+            errors: flatened.fieldErrors,
+            message: ["Error de validación de los datos"],
+            data: submittedData as unknown as Partial<Product>
+        };
+    };
+    try{
+        const result = await prisma.product.create({
+            data: validatedData.data
+        })
+        /*if(!result){
+            return{
+                success: false,
+                message: "Product not created",
+                errors: {additional: ["Product not created"]},
+                data: validatedData.data as unknown as Partial<Product>,
+            }
+        }*/
+        if (!result) throw new Error ("Problemas con la base de datos");
+        return{
+            success: true,
+            message: ["Product added successfully"],
+            errors: {},
+            data: validatedData.data as unknown as Partial<Product>,
+        }
+
+    }catch(error){
+        return {
+            success: false,
+            message: ["Error al crear el producto"],
+            errors: {additional: [error instanceof Error ? error.message : "Error desconocido"]},
+            data: validatedData.data as unknown as Partial<Product>,
+        }
+    }
 }
 
