@@ -5,6 +5,7 @@ import { Button } from '../ui/button'
 import Link from 'next/link'
 import { Pencil, Trash } from 'lucide-react'
 import ProductTablePagination from './product-table-pagination'
+import ProductDeleteButton from '@/components/admin/product-delete'
 
 export default function ProductTable({
     products, 
@@ -46,11 +47,7 @@ export default function ProductTable({
                                             <Pencil />
                                         </Link>
                                     </Button>
-                                    <Button variant={'outline'} className='text-destructive' asChild>
-                                        <Link href={`/admin/products/${product.id}`}>
-                                            <Trash />
-                                        </Link>
-                                    </Button>
+                                    {!!product.id && <ProductDeleteButton id={product.id}/>}
                                 </TableCell>
                             </TableRow>
                         ))

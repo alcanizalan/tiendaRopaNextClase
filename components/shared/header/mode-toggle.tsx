@@ -11,7 +11,11 @@ export default function ModeToggle(){
     const themes = ["system", "light", "dark", "doom"];
     const [position, setPosition] = useState(0)
 
-    useEffect(() => setMounted(true), []);
+    useEffect(() => {
+        // schedule the update on the next tick to avoid calling setState synchronously inside the effect
+        const id = setTimeout(() => setMounted(true), 0);
+        return () => clearTimeout(id);
+    }, []);
 
     const handleClick = () => {
         setPosition(prev =>  prev >= themes.length-1 ? 0 : prev+1);

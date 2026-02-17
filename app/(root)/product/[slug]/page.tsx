@@ -8,8 +8,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
-export default async function ProductDetailsPage({ params }: { params: { slug: string } }){
-    const {slug} = params;
+export default async function ProductDetailsPage({ params }: { params: Promise<{ slug: string }> }){
+    const {slug} = await params;
     const product = await getProductBySlug(slug) as unknown as Product;
     if(!product) notFound();
 

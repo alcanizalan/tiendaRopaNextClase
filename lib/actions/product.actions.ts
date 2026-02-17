@@ -4,6 +4,8 @@ import { convertToPlainObject } from "../utils";
 import {Product2} from "@/types/Product"
 import { Product } from "../generated/prisma/client";
 import { insertProductSchema } from "../validators";
+import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
 export async function getLatestProducts(){
     const { prisma } = await import("@/db/prisma");
@@ -79,7 +81,7 @@ export type ProductFormState = {
 export type ProductFormState = {
     success: boolean,
     errors?: {[K in keyof Product]?:string[]} & {additional?: string[]},
-    message: string[],
+    message: string,
     data?: Partial<Product> | unknown,
 }
 
@@ -90,11 +92,10 @@ export async function createActionProduct(
     const rawData = Object.fromEntries(formData.entries())
     const submittedData = {
         ...rawData,
-        isFeatured: rawData.isfeatured === "on",
+        isFeatured: formData.get("isFeatured") === "on",
         stock: Number(rawData.stock),
-        numReviews: Number(rawData.numReviews),
+        numReviews: Number(rawData.numReviews) || 0,
         //price: rawData.price?.toString() || "0",
-        price: "22.03",
         images: ["/images/imagen.jpg"]
     };
     const validatedData = insertProductSchema.safeParse(submittedData);
@@ -103,7 +104,7 @@ export async function createActionProduct(
         return {
             success: false,
             errors: flatened.fieldErrors,
-            message: ["Error de validación de los datos"],
+            message: "Error de validación de los datos",
             data: submittedData as unknown as Partial<Product>
         };
     };
@@ -122,18 +123,37 @@ export async function createActionProduct(
         if (!result) throw new Error ("Problemas con la base de datos");
         return{
             success: true,
-            message: ["Product added successfully"],
+            message: "Product added successfully",
             errors: {},
             data: validatedData.data as unknown as Partial<Product>,
         }
+        //redirect("/admin?success=true");
 
     }catch(error){
+        // Si el error es de redirección, dejarlo pasar
+        if (error instanceof Error && error.message === 'NEXT_REDIRECT') {
+            throw error;
+        }
         return {
             success: false,
-            message: ["Error al crear el producto"],
+            message: "Error al crear el producto",
             errors: {additional: [error instanceof Error ? error.message : "Error desconocido"]},
             data: validatedData.data as unknown as Partial<Product>,
         }
     }
 }
 
+export async function deleteProduct(id: string) {
+    try {
+        const product = await prisma.product.findFirst({
+            where: { id: id }
+        });
+        if(!product) throw new Error("Producto no encontrado");
+        const data = await prisma.product.delete({
+            where: { id: id }
+        });
+        revalidatePath("/admin")
+    }catch(error){
+        return {success: false, message: "Error eliminando el producto"}
+    }
+}

@@ -11,7 +11,7 @@ export default function CreateProductPage(){
         <div>
             <h2 className="text-2xl font-bold">Create Product</h2>
             <div className="my-8">
-                <ProductForm />
+                <ProductForm type="create" />
             </div>
         </div>
     )

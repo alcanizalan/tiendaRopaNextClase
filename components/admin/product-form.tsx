@@ -1,5 +1,5 @@
 "use client"
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { useRouter } from 'next/navigation';
@@ -11,6 +11,7 @@ import { cn } from '@/lib/utils';
 import { createActionProduct, ProductFormState } from '@/lib/actions/product.actions';
 import { useActionState } from 'react';
 import { Product2 } from '@/types/Product';
+import { toast } from "sonner";
 
 export default function ProductForm({type, product, productId}:{
     type: 'create' | 'edit';
@@ -20,18 +21,24 @@ export default function ProductForm({type, product, productId}:{
     const router = useRouter();
     const initState: ProductFormState = {
         success: false,
-        message: [""],
+        message: "",
         errors: {},
         data: undefined,
     };
-    const [state, formAction] = useActionState(createActionProduct, initState)
+    const [state, formAction] = useActionState(createActionProduct, initState);
+    useEffect(() => {
+        if (state.success){
+            toast.success("Producto insertado con éxito");
+            router.push("/admin");
+        }
+    }, [state, router])
 
     return (
         <Card>
             <CardHeader className='border-b border-foreground/20'>
                 <CardTitle className="flex items-center justify-between">
                     Create Form
-                    <Button type='button' onClick={() => router.back()}></Button>
+                    <Button type='button' onClick={() => router.back()}>Go Back</Button>
                 </CardTitle>
             </CardHeader>
             <CardContent>
