@@ -1,15 +1,19 @@
 "use client";
 import React from "react";
 import { Label } from "../ui/label";
-import { useState, useReducer } from "react";
+import { useState } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { signUpDefaultValues } from "@/lib/constants";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner"
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function CredentialsSignUpForm(){
+    const router = useRouter();
+    const [isPending, setIsPending] = useState(false);
+    
     async function handleSubmit(evt: React.FormEvent<HTMLFormElement>){
         evt.preventDefault();
         const formData = new FormData(evt.currentTarget);
@@ -40,6 +44,9 @@ export default function CredentialsSignUpForm(){
             setStateError("Debes aceptar los términos y condiciones");
             return;
         }
+        
+        setIsPending(true);
+        
         await authClient.signUp.email(
             {
                 name,
@@ -53,11 +60,14 @@ export default function CredentialsSignUpForm(){
                 onResponse: () => {},
                 onError: (ctx) => { 
                     toast.error(ctx.error.message);
-                    console.log(ctx.error.message) },
+                    console.log(ctx.error.message);
+                    setIsPending(false);
+                },
                 onSuccess: () => { 
                     toast.success("Registro Correcto")
                     console.log("Registro Correcto");
                     setStateError("NO_ERRORS");
+                    router.push("/profile");
                 },
             }
         );
@@ -122,8 +132,8 @@ export default function CredentialsSignUpForm(){
                     </div>
                 </div>
                 <div>
-                    <Button className="w-full" type="submit">
-                        Sign up
+                    <Button className="w-full" type="submit" disabled={isPending}>
+                        {isPending ? "Registrando..." : "Sign up"}
                     </Button>
                     <div className={stateError === "NO_ERRORS" ? "hidden" : ""}>
                         <p className="mt-2 text-sm text-red-500">{stateError}</p>
